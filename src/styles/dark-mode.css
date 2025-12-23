@@ -1,0 +1,166 @@
+/* 深色模式支持样式 */
+:root {
+  --bg-blur: 0px;
+  --bg-image: none;
+  --bg-opacity: 0.1;
+}
+
+/* 深色模式基础样式 */
+.dark {
+  color-scheme: dark;
+}
+
+/* 自定义滑块样式 */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #00FF87;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #00FF87;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 深色模式下滑块样式 */
+.dark .slider::-webkit-slider-thumb {
+  border-color: #1e293b;
+}
+
+.dark .slider::-moz-range-thumb {
+  border-color: #1e293b;
+}
+
+/* 背景图片样式 */
+.bg-image-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* 深色模式文本样式 */
+.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+/* 深色模式背景样式 */
+.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.dark .bg-slate-50 {
+  background-color: #334155 !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: #475569 !important;
+}
+
+.dark .bg-slate-200 {
+  background-color: #64748b !important;
+}
+
+/* 深色模式边框样式 */
+.dark .border-slate-200 {
+  border-color: #475569 !important;
+}
+
+.dark .border-slate-300 {
+  border-color: #64748b !important;
+}
+
+/* 深色模式渐变背景 */
+.dark .from-slate-900 {
+  --tw-gradient-from: #0f172a !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(15, 23, 42, 0)) !important;
+}
+
+.dark .to-slate-800 {
+  --tw-gradient-to: #1e293b !important;
+}
+
+/* 深色模式阴影 */
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 深色模式按钮样式 */
+.dark .bg-slate-700 {
+  background-color: #374151 !important;
+}
+
+.dark .bg-slate-700/80 {
+  background-color: rgba(55, 65, 81, 0.8) !important;
+}
+
+.dark .hover\:bg-slate-700:hover {
+  background-color: #4b5563 !important;
+}
+
+/* 深色模式输入框样式 */
+.dark .bg-slate-700 {
+  background-color: #374151 !important;
+}
+
+.dark .border-slate-600 {
+  border-color: #4b5563 !important;
+}
+
+.dark .text-white {
+  color: #ffffff !important;
+}
+
+/* 深色模式占位符文本 */
+.dark .placeholder-slate-400::-webkit-input-placeholder {
+  color: #94a3b8 !important;
+}
+
+.dark .placeholder-slate-400::-moz-placeholder {
+  color: #94a3b8 !important;
+}
+
+/* 深色模式滚动条 */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

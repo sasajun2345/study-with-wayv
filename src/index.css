@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-display: 'Orbitron', 'Poppins', sans-serif;
+}
+
+
+
+:root {
+  --wayv-green: #00FF87;
+  --wayv-green-dark: #00CC6A;
+  --wayv-green-light: #33FFA2;
+  --member-kun: #00FF87;
+  --member-kun-dark: #00CC6A;
+  --member-ten: #FF6B6B;
+  --member-ten-dark: #E05555;
+  --member-xiaojun: #4ECDC4;
+  --member-xiaojun-dark: #38B7AD;
+  --member-hendery: #FFE66D;
+  --member-hendery-dark: #F5D24A;
+  --member-yangyang: #A8E6CF;
+  --member-yangyang-dark: #8BD7BD;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.glow-effect {
+  box-shadow: 0 0 10px var(--wayv-green), 0 0 20px var(--wayv-green), 0 0 30px var(--wayv-green);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px var(--wayv-green), 0 0 20px var(--wayv-green), 0 0 30px var(--wayv-green);
+  }
+  to {
+    box-shadow: 0 0 20px var(--wayv-green), 0 0 30px var(--wayv-green), 0 0 40px var(--wayv-green);
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-glow {
+  text-shadow: 0 2px 16px rgba(16, 185, 129, 0.45);
+}
+
+.text-glow-strong {
+  text-shadow: 0 4px 32px rgba(16, 185, 129, 0.7), 0 2px 12px rgba(255, 255, 255, 0.85);
+}
+
+.mega-drop-shadow {
+  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.35)) drop-shadow(0 12px 48px rgba(0, 255, 135, 0.25));
+}
+
+.glass-card {
+  backdrop-filter: blur(24px) saturate(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.dark .glass-card {
+  background: rgba(2, 6, 23, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Member color utility classes to support dynamic Tailwind-like tokens */
+.bg-member-kun { background-color: var(--member-kun) !important; }
+.bg-member-ten { background-color: var(--member-ten) !important; }
+.bg-member-xiaojun { background-color: var(--member-xiaojun) !important; }
+.bg-member-hendery { background-color: var(--member-hendery) !important; }
+.bg-member-yangyang { background-color: var(--member-yangyang) !important; }
+
+.text-member-kun { color: var(--member-kun) !important; }
+.text-member-ten { color: var(--member-ten) !important; }
+.text-member-xiaojun { color: var(--member-xiaojun) !important; }
+.text-member-hendery { color: var(--member-hendery) !important; }
+.text-member-yangyang { color: var(--member-yangyang) !important; }
+
+.from-member-kun { --tw-gradient-from: var(--member-kun) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0,0,0,0)) !important; }
+.from-member-ten { --tw-gradient-from: var(--member-ten) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0,0,0,0)) !important; }
+.from-member-xiaojun { --tw-gradient-from: var(--member-xiaojun) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0,0,0,0)) !important; }
+.from-member-hendery { --tw-gradient-from: var(--member-hendery) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0,0,0,0)) !important; }
+.from-member-yangyang { --tw-gradient-from: var(--member-yangyang) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0,0,0,0)) !important; }
+
+.to-member-kun-dark { --tw-gradient-to: var(--member-kun-dark) !important; }
+.to-member-ten-dark { --tw-gradient-to: var(--member-ten-dark) !important; }
+.to-member-xiaojun-dark { --tw-gradient-to: var(--member-xiaojun-dark) !important; }
+.to-member-hendery-dark { --tw-gradient-to: var(--member-hendery-dark) !important; }
+.to-member-yangyang-dark { --tw-gradient-to: var(--member-yangyang-dark) !important; }

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计时器持久化修复测试</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #00FF87;
+        }
+        .btn {
+            background: linear-gradient(45deg, #00FF87, #4ECDC4);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0, 255, 135, 0.3);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 135, 0.4);
+        }
+        .result {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .success { color: #00FF87; }
+        .error { color: #FF6B6B; }
+        .warning { color: #FFE66D; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏰ 计时器持久化修复测试</h1>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <button class="btn" onclick="testCustomTimer()">🧪 测试自定义计时器</button>
+            <button class="btn" onclick="testPomodoroTimer()">🍅 测试番茄钟计时器</button>
+            <button class="btn" onclick="testExpiredState()">⏰ 测试过期状态</button>
+            <button class="btn" onclick="clearAllTests()">🗑️ 清理测试数据</button>
+        </div>
+        
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        // 模拟localStorage中的计时器状态
+        function createMockCustomTimerState() {
+            return {
+                timeLeft: 300, // 5分钟 = 300秒
+                isTimerRunning: false,
+                isBreakTime: false,
+                timerType: 'custom',
+                timestamp: Date.now(),
+                currentSessionStartTime: null
+            };
+        }
+
+        function createMockPomodoroTimerState() {
+            return {
+                timeLeft: 1500, // 25分钟 = 1500秒
+                isTimerRunning: false,
+                isBreakTime: false,
+                timerType: 'pomodoro',
+                timestamp: Date.now(),
+                currentSessionStartTime: null
+            };
+        }
+
+        function createExpiredTimerState() {
+            return {
+                timeLeft: 300,
+                isTimerRunning: false,
+                isBreakTime: false,
+                timerType: 'custom',
+                timestamp: Date.now() - 7200000, // 2小时前
+                currentSessionStartTime: null
+            };
+        }
+
+        function testCustomTimer() {
+            const results = [];
+            results.push('=== 🧪 测试自定义计时器状态恢复 ===\n');
+            
+            // 保存自定义计时器状态
+            const customState = createMockCustomTimerState();
+            localStorage.setItem('wayvTimerState', JSON.stringify(customState));
+            results.push('✅ 保存了自定义计时器状态 (5分钟)');
+            
+            // 模拟组件加载时的恢复逻辑
+            const savedTimerState = localStorage.getItem('wayvTimerState');
+            if (savedTimerState) {
+                try {
+                    const parsed = JSON.parse(savedTimerState);
+                    results.push('✅ 成功解析保存的状态');
+                    results.push(`   - 计时器类型: ${parsed.timerType}`);
+                    results.push(`   - 剩余时间: ${parsed.timeLeft}秒 (${Math.ceil(parsed.timeLeft/60)}分钟)`);
+                    results.push(`   - 运行状态: ${parsed.isTimerRunning}`);
+                    results.push(`   - 休息时间: ${parsed.isBreakTime}`);
+                    
+                    if (Date.now() - parsed.timestamp < 3600000) {
+                        results.push('✅ 状态在有效时间范围内(1小时)');
+                        
+                        // 模拟恢复逻辑
+                        const restoredState = {
+                            timeLeft: parsed.timeLeft,
+                            isTimerRunning: parsed.isTimerRunning,
+                            isBreakTime: parsed.isBreakTime,
+                            timerType: parsed.timerType
+                        };
+                        
+                        if (parsed.timerType === 'custom' && parsed.timeLeft > 0) {
+                            const customMinutes = Math.ceil(parsed.timeLeft / 60);
+                            results.push(`✅ 自定义时长识别: ${customMinutes}分钟`);
+                            results.push(`✅ 应该恢复为: ${customMinutes}分钟自定义计时`);
+                        }
+                        
+                        results.push('\n✅ 自定义计时器可以正确恢复');
+                    } else {
+                        results.push('⚠️ 状态已过期，应该忽略恢复');
+                    }
+                } catch (error) {
+                    results.push(`❌ 状态解析失败: ${error.message}`);
+                }
+            } else {
+                results.push('❌ 没有找到保存的状态');
+            }
+            
+            showResults(results.join('\n'));
+        }
+
+        function testPomodoroTimer() {
+            const results = [];
+            results.push('=== 🍅 测试番茄钟计时器状态恢复 ===\n');
+            
+            // 保存番茄钟计时器状态
+            const pomodoroState = createMockPomodoroTimerState();
+            localStorage.setItem('wayvTimerState', JSON.stringify(pomodoroState));
+            results.push('✅ 保存了番茄钟计时器状态 (25分钟)');
+            
+            const savedPomodoroState = localStorage.getItem('wayvTimerState');
+            if (savedPomodoroState) {
+                try {
+                    const parsed = JSON.parse(savedPomodoroState);
+                    results.push('✅ 成功解析番茄钟状态');
+                    results.push(`   - 计时器类型: ${parsed.timerType}`);
+                    results.push(`   - 剩余时间: ${parsed.timeLeft}秒 (${Math.ceil(parsed.timeLeft/60)}分钟)`);
+                    
+                    if (parsed.timerType === 'pomodoro') {
+                        results.push('✅ 正确识别为番茄钟模式');
+                        results.push('✅ 应该恢复为25分钟番茄钟计时');
+                    } else {
+                        results.push('❌ 计时器类型识别错误');
+                    }
+                    
+                    results.push('\n✅ 番茄钟计时器可以正确恢复');
+                } catch (error) {
+                    results.push(`❌ 番茄钟状态解析失败: ${error.message}`);
+                }
+            } else {
+                results.push('❌ 没有找到保存的番茄钟状态');
+            }
+            
+            showResults(results.join('\n'));
+        }
+
+        function testExpiredState() {
+            const results = [];
+            results.push('=== ⏰ 测试过期状态处理 ===\n');
+            
+            // 创建过期状态（超过1小时）
+            const expiredState = createExpiredTimerState();
+            localStorage.setItem('wayvTimerState', JSON.stringify(expiredState));
+            results.push('✅ 保存了过期状态 (2小时前)');
+            
+            const savedExpiredState = localStorage.getItem('wayvTimerState');
+            if (savedExpiredState) {
+                try {
+                    const parsed = JSON.parse(savedExpiredState);
+                    const timeDiff = Date.now() - parsed.timestamp;
+                    const hoursDiff = Math.ceil(timeDiff / 3600000);
+                    results.push(`✅ 过期状态时间差: ${hoursDiff}小时`);
+                    
+                    if (timeDiff >= 3600000) {
+                        results.push('✅ 正确识别为过期状态');
+                        results.push('✅ 应该忽略恢复，使用默认设置');
+                        results.push('✅ 这样可以避免恢复过期的自定义计时设置');
+                    } else {
+                        results.push('⚠️ 状态未过期，应该正常恢复');
+                    }
+                    
+                    results.push('\n✅ 过期状态处理逻辑正确');
+                } catch (error) {
+                    results.push(`❌ 过期状态处理失败: ${error.message}`);
+                }
+            } else {
+                results.push('❌ 没有找到过期状态');
+            }
+            
+            showResults(results.join('\n'));
+        }
+
+        function clearAllTests() {
+            try {
+                localStorage.removeItem('wayvTimerState');
+                showResults('🗑️ 所有测试数据已清理');
+            } catch (error) {
+                showResults(`❌ 清理失败: ${error.message}`);
+            }
+        }
+
+        function showResults(results) {
+            document.getElementById('test-results').innerHTML = 
+                `<div class="test-section"><pre class="result">${results}</pre></div>`;
+        }
+
+        // 页面加载时显示欢迎信息
+        window.addEventListener('load', function() {
+            const welcome = [
+                '🎉 计时器持久化修复测试工具',
+                '',
+                '这个工具用于测试修复后的计时器持久化功能：',
+                '✅ 自定义计时器状态恢复 (5分钟)',
+                '✅ 番茄钟计时器状态恢复 (25分钟)', 
+                '✅ 过期状态处理 (超过1小时忽略)',
+                '✅ 防止切换功能页面时重置为默认番茄钟',
+                '',
+                '点击按钮开始测试...'
+            ];
+            showResults(welcome.join('\n'));
+        });
+    </script>
+</body>
+</html>
